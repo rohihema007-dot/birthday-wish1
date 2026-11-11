@@ -37,6 +37,7 @@
   var cd=document.getElementById('count');
   function openGate(live){
     document.body.classList.add('bday-on');
+    if(window.unlockBoxes)window.unlockBoxes();
     if(live){window.burst(260);setTimeout(function(){window.burst(220)},900)}
   }
   if(cd){
@@ -74,11 +75,18 @@
       document.body.appendChild(e);setTimeout(function(){e.remove()},1500);
     });
   }
+  var cdEl=document.getElementById('count'),T=cdEl?new Date(cdEl.dataset.target).getTime():0;
+  function isLocked(){return Date.now()<T}
   var boxes=document.querySelectorAll('.sset'),opened=0,prog=document.getElementById('progress'),fin=document.getElementById('finale');
   boxes.forEach(function(box){
     var btn=box.querySelector('.giftbig');
     btn.addEventListener('click',function(){
       if(box.classList.contains('open'))return;
+      if(isLocked()){
+        btn.classList.remove('nope');void btn.offsetWidth;btn.classList.add('nope');
+        if(prog)prog.textContent='🔒 Countdown innum mudiyala da 😜 12 mani aana dhaan open aagum';
+        return;
+      }
       box.classList.add('open');btn.disabled=true;btn.setAttribute('aria-expanded','true');
       btn.querySelector('.gbox').textContent='💝';btn.querySelector('small').textContent='open aachu 💖';
       floaty(btn);window.burst(120);opened++;
@@ -91,7 +99,31 @@
     });
   });
 
+  function setLock(on){
+    boxes.forEach(function(b){
+      if(b.classList.contains('open'))return;
+      b.classList.toggle('locked',on);
+      b.querySelector('.gbox').textContent=on?'🔒':'🎁';
+      b.querySelector('small').textContent=on?'countdown mudiyatum 💤':'tap pannu 💖';
+    });
+    if(prog&&!opened)prog.textContent=on?'🔒 Countdown mudinjadhum dhaan open aagum':'0 / '+boxes.length+' surprises open aachu 🎁';
+  }
+  window.unlockBoxes=function(){setLock(false);boxes.forEach(function(b){b.classList.remove('nope')})};
+  setLock(isLocked());
+
   // photo viewer
   var v=document.getElementById('viewer');
   if(v)v.addEventListener('show.bs.modal',function(e){var f=e.relatedTarget;document.getElementById('viewerImg').src=f.dataset.src;document.getElementById('viewerCap').textContent=f.dataset.cap});
+
+  // finale video: tap pannina play aagum (sound-oda)
+  var vid=document.getElementById('bdayVideo'),vp=document.getElementById('vidPlay');
+  if(vid&&vp){
+    vp.addEventListener('click',function(){
+      vid.muted=false;vid.volume=1;
+      var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){});
+    });
+    vid.addEventListener('play',function(){vp.classList.add('hide')});
+    vid.addEventListener('pause',function(){vp.classList.remove('hide')});
+    vid.addEventListener('ended',function(){vp.classList.remove('hide')});
+  }
 })();

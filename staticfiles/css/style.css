@@ -120,3 +120,19 @@ body.bday-on #waiting{display:none}
 .lnote .nh{font-size:1.1rem;letter-spacing:.2em}
 .fl{position:fixed;z-index:60;pointer-events:none;font-size:1.6rem;animation:flup 1.4s ease-out forwards}
 @keyframes flup{to{transform:translate(var(--dx,0),-130px) scale(1.4);opacity:0}}
+
+/* surprise lock until countdown ends */
+body.bday-on .when-locked{display:none}
+body:not(.bday-on) .when-open{display:none}
+.sset.locked .giftbig{background:linear-gradient(135deg,#5b3a73,#7a4f93);box-shadow:none;opacity:.75}
+.sset.locked .giftbig .gbox{animation:none}
+.giftbig.nope{animation:shake .45s}
+
+/* finale video */
+.vidcard{margin:1.4rem auto 0;max-width:230px}
+.vidtitle{font-size:1.5rem;margin:0 0 .6rem}
+.vidwrap{position:relative;width:100%;aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:#000;border:3px solid var(--rose);box-shadow:0 0 0 8px rgba(255,77,121,.18),0 14px 40px rgba(255,77,121,.4)}
+.vidwrap video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+.vidplay{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;display:grid;place-items:center;cursor:pointer;background:rgba(23,7,38,.28)}
+.vidplay .vp-ic{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;padding-left:5px;font-size:1.9rem;color:#fff;background:linear-gradient(135deg,var(--rose),#ff8fab);box-shadow:0 8px 24px rgba(255,77,121,.55);animation:beat 1.2s infinite}
+.vidplay.hide{display:none}
